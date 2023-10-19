@@ -1,3 +1,4 @@
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -14,7 +15,6 @@ app.use(cors());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://tastyEatsHub:WjG4rizT9ypBPugh@cluster0.yfrjdbj.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -32,7 +32,36 @@ async function run() {
         await client.connect();
 
         const database = client.db("tastyEatsDB");
-        const tastyEatsCollection = database.collection("tastyEatsCollection")
+        const tastyEatsCollection = database.collection("tastyEatsCollection");
+        const brandSliderCollection = database.collection("brandSliderCollection");
+
+
+
+        app.get('/brandDetails',async(req,res)=>{
+            const products = req.body;
+            const cursor = await tastyEatsCollection.find().toArray();
+            res.send(cursor)
+        })
+
+
+        app.get('/brandDetails/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query ={_id:new ObjectId(id)}
+            const result =await tastyEatsCollection.findOne(query);
+            res.send(result)
+            
+        })
+
+
+
+        //Slider image storing;
+        app.get('/slider',async(req,res)=>{
+            const sliderInfo = req.body;
+            const cursor = await brandSliderCollection.find().toArray();
+            res.send(cursor)
+        })
+
+
 
 
         app.post('/product',async(req,res)=>{
@@ -41,6 +70,7 @@ async function run() {
             res.send(result)
 
         })
+
 
 
 
