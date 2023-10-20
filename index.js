@@ -34,6 +34,7 @@ async function run() {
         const database = client.db("tastyEatsDB");
         const tastyEatsCollection = database.collection("tastyEatsCollection");
         const brandSliderCollection = database.collection("brandSliderCollection");
+        const userCartCollection = database.collection("userCartCollection");
 
 
 
@@ -56,10 +57,28 @@ async function run() {
 
         //Slider image storing;
         app.get('/slider',async(req,res)=>{
-            const sliderInfo = req.body;
+            // const sliderInfo = req.body;
             const cursor = await brandSliderCollection.find().toArray();
             res.send(cursor)
         })
+
+        // //get user collection ;
+        // app.get('/userCart',async(req,res)=>{
+        //   const cursor = await userCartCollection.find().toArray();
+        //   res.send(cursor)
+           
+        // })
+
+
+        app.get('/userCart/:email',async(req,res)=>{
+           const email = req.params.email;
+           const query = {userEmail:email } 
+          
+          const cursor = await userCartCollection.find(query).toArray();
+          res.send(cursor)
+           
+        })
+
 
 
 
@@ -69,6 +88,15 @@ async function run() {
             const result = await tastyEatsCollection.insertOne(productInfo);
             res.send(result)
 
+        })
+
+        // user collection ;
+
+
+        app.post('/userCart',async(req,res)=>{
+            const userCartInfo = req.body
+            const result = await userCartCollection.insertOne(userCartInfo);
+            res.send(result)
         })
 
 
