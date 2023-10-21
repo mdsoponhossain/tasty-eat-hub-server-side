@@ -52,6 +52,31 @@ async function run() {
             res.send(result)
             
         })
+        app.put('/brandDetails/:id',async(req,res)=>{
+            const id = req.params.id;
+            const filter = {_id:new ObjectId(id)};
+            const options = { upsert: true };
+            const updateProduct = {
+                $set:{
+                   photo:req.body.photo,
+                   name:req.body.name,
+                   brand:req.body.brand,
+                   price:req.body.price,
+                   description:req.body.description,
+                   rating:req.body.rating,
+                   type:req.body.type
+
+                }
+            }
+            const result =await tastyEatsCollection.updateOne(filter,updateProduct,options);
+            res.send(result)
+            
+        })
+
+
+        //update product ;
+
+        // app.patch('/')
 
 
 
@@ -77,6 +102,13 @@ async function run() {
           const cursor = await userCartCollection.find(query).toArray();
           res.send(cursor)
            
+        })
+        //delete user collection
+        app.delete('/userCart/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query ={_id: new ObjectId(id)};
+            const cursor = await userCartCollection.deleteOne(query);
+            res.send(cursor)
         })
 
 
